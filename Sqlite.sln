@@ -1,0 +1,45 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sqlite", "Sqlite.csproj", "{99A3B9CD-F98D-4962-8928-4B12AC21D1E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqliteTests", "SqliteTests\SqliteTests.csproj", "{F6674521-A166-44D0-9675-0680E1B18694}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{99A3B9CD-F98D-4962-8928-4B12AC21D1E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99A3B9CD-F98D-4962-8928-4B12AC21D1E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99A3B9CD-F98D-4962-8928-4B12AC21D1E1}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{99A3B9CD-F98D-4962-8928-4B12AC21D1E1}.Debug|x64.Build.0 = Debug|Any CPU
+		{99A3B9CD-F98D-4962-8928-4B12AC21D1E1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{99A3B9CD-F98D-4962-8928-4B12AC21D1E1}.Debug|x86.Build.0 = Debug|Any CPU
+		{99A3B9CD-F98D-4962-8928-4B12AC21D1E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99A3B9CD-F98D-4962-8928-4B12AC21D1E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99A3B9CD-F98D-4962-8928-4B12AC21D1E1}.Release|x64.ActiveCfg = Release|Any CPU
+		{99A3B9CD-F98D-4962-8928-4B12AC21D1E1}.Release|x64.Build.0 = Release|Any CPU
+		{99A3B9CD-F98D-4962-8928-4B12AC21D1E1}.Release|x86.ActiveCfg = Release|Any CPU
+		{99A3B9CD-F98D-4962-8928-4B12AC21D1E1}.Release|x86.Build.0 = Release|Any CPU
+		{F6674521-A166-44D0-9675-0680E1B18694}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6674521-A166-44D0-9675-0680E1B18694}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6674521-A166-44D0-9675-0680E1B18694}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F6674521-A166-44D0-9675-0680E1B18694}.Debug|x64.Build.0 = Debug|Any CPU
+		{F6674521-A166-44D0-9675-0680E1B18694}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F6674521-A166-44D0-9675-0680E1B18694}.Debug|x86.Build.0 = Debug|Any CPU
+		{F6674521-A166-44D0-9675-0680E1B18694}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6674521-A166-44D0-9675-0680E1B18694}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6674521-A166-44D0-9675-0680E1B18694}.Release|x64.ActiveCfg = Release|Any CPU
+		{F6674521-A166-44D0-9675-0680E1B18694}.Release|x64.Build.0 = Release|Any CPU
+		{F6674521-A166-44D0-9675-0680E1B18694}.Release|x86.ActiveCfg = Release|Any CPU
+		{F6674521-A166-44D0-9675-0680E1B18694}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
