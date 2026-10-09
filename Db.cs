@@ -1,4 +1,6 @@
-﻿namespace Sqlite;
+﻿using System.Runtime.CompilerServices;
+
+namespace Sqlite;
 
 using System.Buffers.Binary;
 using System.Text;
@@ -101,14 +103,15 @@ public class Db
     }
 
     // Returns the exact memory slot where the new row (represented by rowNumber) needs to be written
-    public Span<byte> GetRowSlot(Table table, int rowNumber)
+    public Span<byte> GetRowSlot(Pager pager, int rowNumber)
     {
         int pageNumber = rowNumber / Constants.ROWS_PER_PAGE;
-        byte[]? page = table.Pages[pageNumber];
+        var page = pager.GetPage(pageNumber);
+        
         if (page == null)
         {
             // Allocate memory only when we try to access the page
-            page = table.Pages[pageNumber] = new byte[Constants.PAGE_SIZE];
+            page = pager.Pages[pageNumber] = new byte[Constants.PAGE_SIZE];
         }
         // what is the relative row number of this new row on the page it needs to be written to
         int rowOffset = rowNumber % Constants.ROWS_PER_PAGE;
@@ -139,7 +142,7 @@ public class Db
     {
         for (int i = 0; i < table.NumberOfRows; ++i)
         {
-            var row = DeserializeRow(GetRowSlot(table, i));
+            var row = DeserializeRow(GetRowSlot(table.Pager, i));
             row.Print();
         }
 
@@ -152,17 +155,18 @@ public class Db
             return ExecuteResult.TableFull;
 
         Row rowToInsert = statement.RowToInsert;
-        SerializeRow(rowToInsert, GetRowSlot(table, table.NumberOfRows));
+        SerializeRow(rowToInsert, GetRowSlot(table.Pager, table.NumberOfRows));
         ++table.NumberOfRows;
 
         return ExecuteResult.Success;
     }
     
     // COMPILER FUNCTIONS
-    public MetaCommandResult RunMetaCommand(string userInput)
+    public MetaCommandResult RunMetaCommand(string userInput, Table table)
     {
         if (userInput == ".exit")
         {
+            Close(table);
             return  MetaCommandResult.Exit;
         }
         else
@@ -171,4 +175,47 @@ public class Db
         }
     }
     
+    // Part 5 functions
+    /// <summary>
+    /// Initializes the Pager, connect the pager to file, initialize Table and return the Table
+    /// </summary>
+    public Table Open(string fileName)
+    {
+        Pager pager = new Pager(fileName);
+        Table table = new Table(pager);
+        return table;
+    }
+
+    /// <summary>
+    /// Flush Page cache to disk, close db file, free memory for Pager and Table
+    /// </summary>
+    public void Close(Table table)
+    {
+        var pager = table.Pager;
+        int fullPageCount = table.NumberOfRows / Constants.ROWS_PER_PAGE;
+        
+        // Empty the pager
+        for (int i = 0; i < fullPageCount; ++i)
+        {
+            if (pager.Pages[i] == null) continue;
+            pager.Flush(i, Constants.PAGE_SIZE);
+            pager.Pages[i] = null;
+        }
+        
+        // Handle the partial page which may be present in the end
+        int additionalRowCount = table.NumberOfRows % Constants.ROWS_PER_PAGE;
+        if (additionalRowCount > 0)
+        {
+            int pageNumber = fullPageCount;
+            if (pager.Pages[pageNumber] != null)
+            {
+                pager.Flush(pageNumber, additionalRowCount * Constants.ROW_SIZE);
+                pager.Pages[pageNumber] = null;
+            }
+        }
+
+        pager.Dispose();
+        // Since the table only consists of the pager, and we already nulled all pages in table.Pager, at this point we 
+        // have made both table.Pager and table obsolete
+    }
 }

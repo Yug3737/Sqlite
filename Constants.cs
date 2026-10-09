@@ -12,7 +12,7 @@ public static class Constants
     public const int ROW_SIZE = ID_SIZE + USERNAME_SIZE + EMAIL_SIZE;
 
     public const int PAGE_SIZE = 4096;
-    public const int TABLE_MAX_PAGES = 100;
+    public const int TABLE_MAX_PAGES = 100; // Page numbers would run from 0 - 99 in the project.
     public const int ROWS_PER_PAGE = PAGE_SIZE / ROW_SIZE;
     public const int TABLE_MAX_ROWS = TABLE_MAX_PAGES * ROWS_PER_PAGE;
 }

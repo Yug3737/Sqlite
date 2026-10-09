@@ -1,6 +1,6 @@
 ﻿// file: Program.cs
 // author: Yug Patel
-// last modified: 12 July 2026
+// last modified: 8 October 2026
 
 using Sqlite;
 
@@ -8,7 +8,13 @@ using Sqlite;
 var ci = new ConsoleInteractor();
 var db = new Db();
 
-var table = new Table();
+if (args.Length < 1)
+{
+    Console.WriteLine("Must supply a database file name.");
+    return;
+}
+
+var table = db.Open(args[0]);
 var running = true;
 while (running)
 {
@@ -22,7 +28,7 @@ while (running)
     // Handle Meta commands first
     if (userInput.StartsWith('.'))
     {
-        switch (db.RunMetaCommand(userInput))
+        switch (db.RunMetaCommand(userInput, table))
         {
             case MetaCommandResult.Exit:
                 running = false;
@@ -64,6 +70,3 @@ while (running)
 
 ci.PrintExitMessage();
 // END MAIN LOOP
-
-
-// Console.WriteLine(AppContext.BaseDirectory);
