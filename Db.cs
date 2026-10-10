@@ -103,18 +103,18 @@ public class Db
     }
 
     // Returns the exact memory slot where the new row (represented by rowNumber) needs to be written
-    public Span<byte> GetRowSlot(Pager pager, int rowNumber)
+    public Span<byte> GetRowSlot(Cursor cursor)
     {
-        int pageNumber = rowNumber / Constants.ROWS_PER_PAGE;
-        var page = pager.GetPage(pageNumber);
+        int pageNumber = cursor.RowNumber / Constants.ROWS_PER_PAGE;
+        var page = cursor.Table.Pager.GetPage(pageNumber);
         
         if (page == null)
         {
             // Allocate memory only when we try to access the page
-            page = pager.Pages[pageNumber] = new byte[Constants.PAGE_SIZE];
+            page = cursor.Table.Pager.Pages[pageNumber] = new byte[Constants.PAGE_SIZE];
         }
         // what is the relative row number of this new row on the page it needs to be written to
-        int rowOffset = rowNumber % Constants.ROWS_PER_PAGE;
+        int rowOffset = cursor.RowNumber % Constants.ROWS_PER_PAGE;
         int byteOffset = rowOffset * Constants.ROW_SIZE;
         return page.AsSpan(byteOffset, Constants.ROW_SIZE);
     }
@@ -140,10 +140,12 @@ public class Db
 
     public ExecuteResult ExecuteSelect(Statement statement, Table table)
     {
-        for (int i = 0; i < table.NumberOfRows; ++i)
+        var cursor = table.GetTableStartCursor();
+        while (!cursor.EndOfTable)
         {
-            var row = DeserializeRow(GetRowSlot(table.Pager, i));
+            var row = DeserializeRow(GetRowSlot(cursor));
             row.Print();
+            cursor.Advance();
         }
 
         return ExecuteResult.Success;
@@ -155,7 +157,8 @@ public class Db
             return ExecuteResult.TableFull;
 
         Row rowToInsert = statement.RowToInsert;
-        SerializeRow(rowToInsert, GetRowSlot(table.Pager, table.NumberOfRows));
+        var cursor = table.GetTableEndCursor();
+        SerializeRow(rowToInsert, GetRowSlot(cursor));
         ++table.NumberOfRows;
 
         return ExecuteResult.Success;
